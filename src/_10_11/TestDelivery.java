@@ -3,7 +3,7 @@ package _10_11;
 public class TestDelivery {
 
 	public static void main(String[] args) {
-		Worker w = new Worker();
+		PostWorker w = new PostWorker();
 		for(int i = 0; i < 5; ++i)
 			new Thread(w).start();
 		w.deliver("I am so blue I'm greener than purple.");

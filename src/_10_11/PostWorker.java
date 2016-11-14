@@ -3,7 +3,7 @@ package _10_11;
 import java.util.LinkedList;
 import java.util.List;
 
-public class Worker implements Runnable {
+public class PostWorker implements Runnable {
 	List<String> toDeliver = new LinkedList<String>();
 
 	public void deliver(String s) {
@@ -20,15 +20,13 @@ public class Worker implements Runnable {
 		}
 	}
 
-	private void waitForDelivery() {
-		synchronized (toDeliver) {
-			while (toDeliver.isEmpty())
-				try {
-					toDeliver.wait();
-				} catch (InterruptedException e) {
-					System.out.println("Thread " + Thread.currentThread().getId() + " has interrupted wait");
-				}
-		}
+	private void waitForOrder() {
+		while (toDeliver.isEmpty())
+			try {
+				toDeliver.wait();
+			} catch (InterruptedException e) {
+				System.out.println("Thread " + Thread.currentThread().getId() + " has interrupted wait");
+			}
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class Worker implements Runnable {
 		while (true) {
 			String got;
 			synchronized (toDeliver) {
-				waitForDelivery();
+				waitForOrder();
 				got = toDeliver.remove(0);
 				if (got.equals("finish your work")) {
 					toDeliver.add(got);
@@ -46,7 +44,7 @@ public class Worker implements Runnable {
 				}
 			}
 			System.out.println("Thread " + Thread.currentThread().getId() + " delivers: " + got);
-			justSleep(500);
+			justSleep(50);
 		}
 	}
 }
